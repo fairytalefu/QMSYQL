@@ -1,0 +1,22 @@
+ Qt5.9.3安装mysql的QMYSQL驱动
+QSqlDatabase: MYSQL driver not loaded.QSqlDatabase: available drivers: QSQLITE QMYSQL QMYSQL3 QODBC QODBC3 QPSQL QPSQL7
+1.编译安装mysql驱动 
+sudo apt install libmysqlclient20 libmysqlclient-dev
+sudo ln -s /usr/lib/x86_64-linux-gnu/libmysqlclient.so /usr/lib/x86_64-linux-gnu/libmysqlclient_r.so 
+2.在../sqldriver/新建qtsqldrivers-config.pri
+QT.sqldrivers.enabled_features =
+QT.sqldrivers.disabled_features =
+QT.sqldrivers.QT_CONFIG =
+QT.sqldrivers.exports =
+QT.sqldrivers_private.enabled_features = sql-sqlite sql-mysql
+QT.sqldrivers_private.disabled_features = sql-db2 sql-ibase sql-oci sql-odbc sql-psql sql-sqlite2 sql-tds system-sqlite
+QT.sqldrivers_private.libraries =
+
+3.进入qt源码路径下的mysql目录    
+$QTDIR/Qt5.9.0/5.9/Src/qtbase/src/plugins/sqldrivers/mysql    
+4.qmake 编译该工程    
+qmake "INCLUDEPATH+=/usr/include/mysql" "LIBS+=-L/usr/lib/x86_64-linux-gnu/ -lmysqlclient" mysql.pro    
+5.make && make install    
+6.如果编译时报错：Project ERROR: Library 'mysql' is not defined. 
+把mysql.pro中的 QMAKE_USE += mysql用#注释掉,  即 #QMAKE_USE += mysql
+
